@@ -2,7 +2,7 @@
 
 Based on the paper [Optimal Path Planning of a Mobile Robot using Quadrant Based Random Particle Optimization Method](https://www.researchgate.net/publication/325170465_Optimal_Path_Planning_of_a_Mobile_Robot_using_Quadrant_Based_Random_Particle_Optimization_Method)
 
-![Graph](https://github.com/usmanmehmood55/Random-Particle-Optimization/blob/main/graph.PNG)
+![Graph](https://github.com/usmanmehmood55/Random-Particle-Optimization/blob/master/graph.PNG)
 
 Was originally ported to Arduino but I'm currently testing it on MATLAB, so the Arduino port is outdated.
 
