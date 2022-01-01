@@ -31,9 +31,8 @@ struct gaussian_point
  */
 double potential(gaussian_point gaussian, point _point)
 {
-	double potntl =
-		gaussian.height *
-		exp(-1 * (double)gaussian.width * (pow((_point.x - gaussian.x), 2) + pow((_point.y - gaussian.y), 2)));
+	double ds_sq = (pow((_point.x - gaussian.x), 2) + pow((_point.y - gaussian.y), 2));
+	double potntl = gaussian.height * exp(-1 * (double)gaussian.width * ds_sq);
 	return potntl;
 }
 

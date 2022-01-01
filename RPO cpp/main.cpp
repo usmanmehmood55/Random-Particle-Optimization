@@ -17,11 +17,11 @@ int main()
 	// create robot instance
 	point robot = set_point(0, 0);
 
-	// create obstacle instance
-	gaussian_point obstacle = set_gaussian(goal_x, goal_y, goal_depth * -1, goal_width);
-
 	// create goal instance
-	gaussian_point goal = set_gaussian(obst_x, obst_y, obstacle_height, obstacle_width);
+	gaussian_point goal = set_gaussian(goal_x, goal_y, goal_depth * -1, goal_width);
+
+	// create obstacle instance
+	gaussian_point obstacle = set_gaussian(obst_x, obst_y, obstacle_height, obstacle_width);
 
 	// set step size
 	double step_size = 0.01 * distance(robot, goal);
@@ -45,7 +45,7 @@ int main()
 		robot = artificial_points[select_index];
 
 		printf("\nX = %f\tY = %f\tDTG = %f",
-			robot.x, robot.y, distance(robot, goal));
+			   robot.x, robot.y, distance(robot, goal));
 
 		// continue iterations
 		iteration++;
