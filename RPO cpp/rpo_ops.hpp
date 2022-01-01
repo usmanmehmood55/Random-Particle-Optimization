@@ -21,21 +21,6 @@ struct gaussian_point
 	int width = 0;
 };
 
-double distance(gaussian_point a, gaussian_point b)
-{
-	return sqrt(pow((a.x - b.x), 2) + pow((a.y - b.y), 2));
-}
-
-double distance(point a, gaussian_point b)
-{
-	return sqrt(pow((a.x - b.x), 2) + pow((a.y - b.y), 2));
-}
-
-double distance(point a, point b)
-{
-	return sqrt(pow((a.x - b.x), 2) + pow((a.y - b.y), 2));
-}
-
 /**
  * @brief calculates gaussian potential for a single point in relation
  * to a gaussian point
@@ -176,4 +161,19 @@ uint16_t select_ap(point robot, gaussian_point goal, point *ap)
 		}
 	}
 	return select_index;
+}
+
+double distance(gaussian_point a, gaussian_point b)
+{
+	return sqrt(pow((a.x - b.x), 2) + pow((a.y - b.y), 2));
+}
+
+double distance(point a, gaussian_point b)
+{
+	return sqrt(pow((a.x - b.x), 2) + pow((a.y - b.y), 2));
+}
+
+double distance(point a, point b)
+{
+	return sqrt(pow((a.x - b.x), 2) + pow((a.y - b.y), 2));
 }

@@ -27,9 +27,10 @@ int main()
 	double step_size = 0.01 * distance(robot, goal);
 
 	printf("\nStep Size:\t%f\nNumber of APs:\t%u", step_size, NPTS);
-
 	uint16_t iteration = 1;
-	while (iteration != 0)
+
+	// Stopping criteria for the algorithm
+	while (distance(robot, goal) > 2)
 	{
 		// create artificial points
 		point artificial_points[NPTS + 1];
@@ -44,18 +45,12 @@ int main()
 		robot = artificial_points[select_index];
 
 		printf("\nX = %f\tY = %f\tDTG = %f",
-			   robot.x, robot.y, distance(robot, goal));
-
-		// Stopping criteria for the algorithm
-		if (distance(robot, goal) < 2)
-		{
-			printf("\nReached Target\nNumber of iterations = %d", iteration);
-			break;
-		}
+			robot.x, robot.y, distance(robot, goal));
 
 		// continue iterations
-		else
-			iteration++;
+		iteration++;
 	}
+
+	printf("\nReached Target\nNumber of iterations = %d", iteration);
 	return 0;
 }
