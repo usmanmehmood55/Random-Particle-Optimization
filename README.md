@@ -9,8 +9,7 @@ Was originally ported to Arduino but I'm currently testing it on MATLAB, so the 
 The code shows cartesian coordinates for the robot to move while avoiding a single obstacle anywhere in a static environment. This can of course easily be scaled to navigate in a dynamic environment with multiple obstacles. 
 This code DOES NOT operate a robot right away, it simply takes environment properties as inputs and gives coordinates as output. 
 
-- [RPO Arduino](https://github.com/usmanmehmood55/Random-Particle-Optimization/tree/master/RPO%20Arduino) folder contains the Arduino port
-- [RPO cpp](https://github.com/usmanmehmood55/Random-Particle-Optimization/tree/master/RPO%20cpp) folder contains a standalone c++ file
+- [RPO cpp](https://github.com/usmanmehmood55/Random-Particle-Optimization/tree/master/RPO%20cpp) folder contains the C++ implementation
 - [RPO MATLAB](https://github.com/usmanmehmood55/Random-Particle-Optimization/tree/master/RPO%20MATLAB) contains a matlab script and functions, currently being worked upon
 
 ## What works
