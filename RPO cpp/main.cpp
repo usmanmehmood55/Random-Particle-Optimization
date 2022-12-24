@@ -36,10 +36,10 @@ int main()
         point artificial_points[NPTS + 1];
 
         // calculate coordinates and potentials of artificial points
-        set_artificial_points(step_size, obstacle, goal, robot, artificial_points);
+        set_artificial_points(step_size, &obstacle, &goal, robot, artificial_points);
 
         // select the best artificial point to move to
-        uint16_t select_index = select_ap(robot, goal, artificial_points);
+        uint16_t select_index = select_ap(&robot, &goal, artificial_points);
 
         // move to selected artificial point
         robot = artificial_points[select_index];

@@ -5,8 +5,9 @@
 /**
  * @brief Calculates the distance between two gaussian points
  * 
- * @param a first gaussian point
- * @param b second gaussian point
+ * @param a       first gaussian point
+ * @param b       second gaussian point
+ * 
  * @return double distance between the points
  */
 double distance(gaussian_point a, gaussian_point b)
@@ -17,8 +18,9 @@ double distance(gaussian_point a, gaussian_point b)
 /**
  * @brief Calculates the distance between a point and a gaussian point
  * 
- * @param a point
- * @param b gaussian point
+ * @param a       point
+ * @param b       gaussian point
+ * 
  * @return double distance between the points
  */
 double distance(point a, gaussian_point b)
@@ -29,8 +31,9 @@ double distance(point a, gaussian_point b)
 /**
  * @brief Calculates the distance between a gaussian point and a point
  * 
- * @param a gaussian point
- * @param b point
+ * @param a       gaussian point
+ * @param b       point
+ * 
  * @return double distance between the points
  */
 double distance(gaussian_point a, point b)
@@ -41,27 +44,29 @@ double distance(gaussian_point a, point b)
 /**
  * @brief Calculates the distance between two points
  * 
- * @param a first point
- * @param b second point
+ * @param  a      first point
+ * @param  b      second point
+ * 
  * @return double distance between the points
  */
-double distance(point a, point b)
+double distance(const point a, const point b)
 {
     return sqrt(pow((a.x - b.x), 2) + pow((a.y - b.y), 2));
 }
 
 /**
- * @brief calculates gaussian potential for a single point in relation
+ * @brief Calculates gaussian potential for a single point in relation
  * to a gaussian point
  * 
- * @param gaussian 
- * @param _point 
+ * @param  p_gaussian 
+ * @param  p_point 
+ * 
  * @return double 
  */
-double potential(gaussian_point gaussian, point _point)
+double potential(const gaussian_point * p_gaussian, const point * p_point)
 {
-    double dist_squared = (pow((_point.x - gaussian.x), 2) + pow((_point.y - gaussian.y), 2));
-    double potential    = gaussian.height * exp(-1 * (double)gaussian.width * dist_squared);
+    double dist_squared = (pow((p_point->x - p_gaussian->x), 2) + pow((p_point->y - p_gaussian->y), 2));
+    double potential    = p_gaussian->height * exp(-1 * (double)p_gaussian->width * dist_squared);
     return potential;
 }
 
@@ -69,21 +74,23 @@ double potential(gaussian_point gaussian, point _point)
  * @brief calculates gaussian potential for a single point in relation
  * to a gaussian point
  * 
- * @param _point
- * @param gaussian
+ * @param p_point
+ * @param p_gaussian
+ * 
  * @return double 
  */
-double potential(point _point, gaussian_point gaussian)
+double potential(const point * p_point, const gaussian_point * p_gaussian)
 {
-    return potential(gaussian, _point);
+    return potential(p_gaussian, p_point);
 }
 
 /**
  * @brief Sets the non gaussian point object
  * 
- * @param x x coordinate of point
- * @param y y coordinate of point
- * @return point 
+ * @param x      x coordinate of point
+ * @param y      y coordinate of point
+ * 
+ * @return point filled object
  */
 point set_point(double x, double y)
 {
@@ -95,11 +102,12 @@ point set_point(double x, double y)
  * For goal object, the height must be negative. For obstacle object, 
  * the height must be positive.
  * 
- * @param x x coordinate of the gaussian object
- * @param y y coordinate of the gaussian object
- * @param height height of the gaussian object
- * @param width width of the gaussian object
- * @return gaussian_point 
+ * @param x               x coordinate of the gaussian object
+ * @param y               y coordinate of the gaussian object
+ * @param height          height of the gaussian object
+ * @param width           width of the gaussian object
+ * 
+ * @return gaussian_point filled object
  */
 gaussian_point set_gaussian(double x, double y, int height, int width)
 {
@@ -126,12 +134,12 @@ gaussian_point set_gaussian(double x, double y, int height, int width)
  */
 void set_artificial_points(
     double step_size,
-    gaussian_point obstacle,
-    gaussian_point goal,
+    const gaussian_point * p_obstacle,
+    const gaussian_point * p_goal,
     point robot,
     point artificial_points[NPTS])
 {
-    for (uint16_t i = 1; i <= NPTS - 1; i++)
+    for (uint16_t  i = 1; i <= NPTS - 1; i++)
     {
         // calculate the angle of artificial point
         double theta = ((i - 1) * ((double)360 / (double)NPTS));
@@ -141,8 +149,8 @@ void set_artificial_points(
         {
             .x                  = robot.x + (step_size * cos((theta * pi) / 180.0)),
             .y                  = robot.y + (step_size * sin(theta * pi / 180.0)),
-            .obstacle_potential = potential(obstacle, this_point),
-            .goal_potential     = potential(goal, this_point),
+            .obstacle_potential = potential(p_obstacle, &this_point),
+            .goal_potential     = potential(p_obstacle, &this_point),
         };
 
         artificial_points[i] = this_point;
@@ -154,51 +162,52 @@ void set_artificial_points(
  * potentials with respect to the positions and potentials of the
  * goal, obstacle, and robot.
  * 
- * @param robot robot instance
- * @param goal goal instance
- * @param ap artificial points array
- * @return uint16_t index of the best artificial point
+ * @param robot             robot instance
+ * @param goal              goal instance
+ * @param artificial_points artificial points array
+ * 
+ * @return uint16_t         index of the best artificial point
  */
-uint16_t select_ap(point robot, gaussian_point goal, point ap[NPTS])
+uint16_t select_ap(const point * p_robot, const gaussian_point * p_goal, point artificial_points[NPTS])
 {
-    double error_potential[NPTS + 1];
-    double error_distance [NPTS + 1];
+    double error_potential[NPTS];
+    double error_distance [NPTS];
 
-    double robot_total_potential = robot.goal_potential + robot.obstacle_potential;
-    for (uint16_t i = 1; i <= NPTS - 1; i++)
+    double robot_total_potential = p_robot->goal_potential + p_robot->obstacle_potential;
+    for (uint16_t this_point = 0; this_point < NPTS; this_point++)
     {
         // Calculating errors in potentials and distances
-        double ap_total_potential = ap[i].goal_potential  + ap[i].obstacle_potential;
-        error_potential[i]        = ap_total_potential    - robot_total_potential;
-        error_distance[i]         = distance(ap[i], goal) - distance(robot, goal);
+        double ap_total_potential = artificial_points[this_point].goal_potential + artificial_points[this_point].obstacle_potential;
+        error_potential[this_point] = ap_total_potential - robot_total_potential;
+        error_distance[this_point] = distance(artificial_points[this_point], * p_goal) - distance(* p_robot, * p_goal);
     }
 
     uint16_t select_index             = 0;
     double   selected_error_distance  = error_distance[1];
     double   selected_error_potential = error_potential[1];
-    for (uint16_t i = 1; i <= NPTS; i++)
+    for (uint16_t this_point = 0; this_point < NPTS; this_point++)
     {
-        if ((error_potential[i] < 0) && (error_distance[i] < 0))
+        if ((error_potential[this_point] < 0) && (error_distance[this_point] < 0))
         {
-            if (error_potential[i] <= selected_error_potential)
+            if (error_potential[this_point] <= selected_error_potential)
             {
-                selected_error_potential = error_potential[i];
-                select_index             = i;
+                selected_error_potential = error_potential[this_point];
+                select_index             = this_point;
             }
         }
     }
 
     if (select_index == 0)
     {
-        selected_error_distance  = error_distance[1];
+        selected_error_distance  = error_distance [1];
         selected_error_potential = error_potential[1];
 
-        for (int i = 1; i <= NPTS; i++)
+        for (uint16_t this_point = 0; this_point < NPTS; this_point++)
         {
-            if (error_distance[i] <= selected_error_distance)
+            if (error_distance[this_point] <= selected_error_distance)
             {
-                selected_error_distance = error_distance[i];
-                select_index            = i;
+                selected_error_distance = error_distance[this_point];
+                select_index            = this_point;
             }
         }
     }
