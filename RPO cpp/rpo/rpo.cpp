@@ -1,6 +1,6 @@
 #include "rpo.hpp"
 
-#define pi (double)3.14159265359
+#define pi (double)3.14159265358979323
 
 /**
  * @brief Calculates the distance between two gaussian points
@@ -131,7 +131,7 @@ void set_artificial_points(
     point robot,
     point artificial_points[NPTS])
 {
-    for (uint16_t i = 1; i <= NPTS; i++)
+    for (uint16_t i = 1; i <= NPTS - 1; i++)
     {
         // calculate the angle of artificial point
         double theta = ((i - 1) * ((double)360 / (double)NPTS));
@@ -159,17 +159,17 @@ void set_artificial_points(
  * @param ap artificial points array
  * @return uint16_t index of the best artificial point
  */
-uint16_t select_ap(point robot, gaussian_point goal, point *ap)
+uint16_t select_ap(point robot, gaussian_point goal, point ap[NPTS])
 {
     double error_potential[NPTS + 1];
-    double error_distance[NPTS + 1];
+    double error_distance [NPTS + 1];
 
     double robot_total_potential = robot.goal_potential + robot.obstacle_potential;
-    for (uint16_t i = 1; i <= NPTS; i++)
+    for (uint16_t i = 1; i <= NPTS - 1; i++)
     {
         // Calculating errors in potentials and distances
-        double ap_total_potential = ap[i].goal_potential + ap[i].obstacle_potential;
-        error_potential[i]        = ap_total_potential - robot_total_potential;
+        double ap_total_potential = ap[i].goal_potential  + ap[i].obstacle_potential;
+        error_potential[i]        = ap_total_potential    - robot_total_potential;
         error_distance[i]         = distance(ap[i], goal) - distance(robot, goal);
     }
 
